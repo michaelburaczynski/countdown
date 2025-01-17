@@ -102,19 +102,20 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const fontSize = 16;
-    const columns = Math.floor(canvas.width / fontSize);
+    const fontSizes = [12, 14, 16, 18, 20, 22, 24]; // Varying font sizes
+    const columns = Math.floor(canvas.width / Math.max(...fontSizes));
     const drops = Array(columns).fill(0);
 
     function drawMatrix() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#00ff00";
-      ctx.font = `${fontSize}px 'Courier New'`;
-
       drops.forEach((y, x) => {
+        const fontSize = fontSizes[Math.floor(Math.random() * fontSizes.length)];
+        ctx.font = `${fontSize}px 'Courier New'`;
+
         const text = Math.random() > 0.5 ? "1" : "0"; // Generate 1s and 0s
+        ctx.fillStyle = `rgba(0, 255, 0, ${Math.random() * 0.8 + 0.2})`; // Random brightness for glow
         ctx.fillText(text, x * fontSize, y * fontSize);
 
         if (y * fontSize > canvas.height && Math.random() > 0.975) {
