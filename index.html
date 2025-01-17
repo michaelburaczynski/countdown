@@ -11,10 +11,10 @@
       margin: 0;
       padding: 0;
       font-family: 'Dancing Script', cursive; /* Footer font */
-      background-color: #b22222; /* Green background for the present */
+      background-color: #b22222; /* Red background for the present */
       background-image: 
-        linear-gradient(to bottom, #013220, #013220), /* Vertical red ribbon */
-        linear-gradient(to right, #013220, #013220); /* Horizontal red ribbon */
+        linear-gradient(to bottom, #013220, #013220), /* Vertical gold ribbon */
+        linear-gradient(to right, #013220, #013220); /* Horizontal gold ribbon */
       background-size: 100% 10%, 10% 100%; /* Full thickness for ribbons */
       background-position: center center;
       background-repeat: no-repeat;
@@ -78,13 +78,19 @@
   </div>
   <footer>Await Further Instructions...</footer>
 
-  <!-- Ticking Sound -->
-  <audio id="tick-sound" src="echoing-clock-tick.wav" preload="auto"></audio>
-
   <canvas id="snow"></canvas>
 
   <script>
-    // Countdown Timer
+    // Store the ticking sounds in an array
+    const tickingSounds = [
+      "echoing-clock-tick", // Replace with the actual file names
+      "echoing-clock-tick-2",
+      "echoing-clock-tick-3",
+      "echoing-clock-tick-4",
+    ];
+
+    let currentSoundIndex = 0; // Keeps track of the current sound
+
     function updateCountdown() {
       const targetDate = new Date("September 1, 2025 00:00:00").getTime();
       const now = new Date().getTime();
@@ -105,10 +111,12 @@
       document.getElementById("minutes").innerText = minutes;
       document.getElementById("seconds").innerText = seconds;
 
-      // Play ticking sound
-      const tickSound = document.getElementById("tick-sound");
-      tickSound.currentTime = 0; // Reset sound
-      tickSound.play();
+      // Play the current sound
+      const tickSound = new Audio(tickingSounds[currentSoundIndex]);
+      tickSound.play().catch((err) => console.error("Audio playback failed:", err));
+
+      // Update to the next sound in sequence
+      currentSoundIndex = (currentSoundIndex + 1) % tickingSounds.length;
 
       if (difference < 0) {
         clearInterval(interval);
