@@ -9,21 +9,43 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Courier New', Courier, monospace; /* Matrix-style font */
-      background: black; /* Dark background */
-      color: #00ff00; /* Matrix green text */
-      overflow: hidden; /* Prevent scrollbars from appearing */
+      font-family: 'Arial', sans-serif;
+      background: radial-gradient(circle, #0a0a0a, #000000); /* Mysterious dark gradient */
+      color: #00ffaa; /* Subtle glowing green text */
+      overflow: hidden; /* Prevent scrolling */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
     }
 
-    /* Countdown Styling */
+    /* Subtle Animated Background */
+    @keyframes drift {
+      0% { background-position: 0 0; }
+      100% { background-position: 100% 100%; }
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 255, 170, 0.15), transparent 70%);
+      animation: drift 10s linear infinite;
+      z-index: 0;
+    }
+
+    /* Countdown Container */
     #countdown {
       position: relative;
       z-index: 10;
       display: flex;
       justify-content: center;
       gap: 2rem;
-      font-size: 2rem;
-      margin-top: 20vh;
+      font-size: 1.5rem;
     }
 
     .time {
@@ -32,38 +54,51 @@
 
     .time span {
       display: block;
-      font-size: 4rem;
+      font-size: 3rem;
       font-weight: bold;
-      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; /* Glowing effect */
+      text-shadow: 0 0 8px #00ffaa, 0 0 16px #00ffaa; /* Glowing effect */
     }
 
+    /* Intro Text */
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      text-shadow: 0 0 10px #00ffaa, 0 0 20px #00ffaa; /* Glowing effect */
+      z-index: 10;
+    }
+
+    /* Footer */
     footer {
       position: absolute;
       bottom: 20px;
       font-size: 0.9rem;
-      color: rgba(0, 255, 0, 0.8);
+      color: rgba(0, 255, 170, 0.8);
       text-align: center;
       width: 100%;
+      z-index: 10;
     }
 
-    /* Falling Code Effect */
+    /* Particle Effect */
     canvas {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 1; /* Behind the countdown */
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <canvas id="matrix"></canvas>
+  <h1>Your Journey Begins Soon...</h1>
   <div id="countdown">
     <div class="time"><span id="days">0</span>Days</div>
     <div class="time"><span id="hours">0</span>Hours</div>
     <div class="time"><span id="minutes">0</span>Minutes</div>
     <div class="time"><span id="seconds">0</span>Seconds</div>
   </div>
-  <footer>Your Journey begin soon...</footer>
+  <footer>Await further instructions...</footer>
+
+  <canvas id="particles"></canvas>
 
   <script>
     // Countdown Timer
@@ -89,47 +124,45 @@
 
       if (difference < 0) {
         clearInterval(interval);
-        document.getElementById("countdown").innerHTML = "<h2>Time's Up!</h2>";
+        document.getElementById("countdown").innerHTML = "<h2>It’s Time...</h2>";
       }
     }
 
     const interval = setInterval(updateCountdown, 1000);
 
-    // Matrix Falling Binary Code Effect
-    const canvas = document.getElementById('matrix');
+    // Particle Effect
+    const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const fontSizes = [12, 14, 16, 18, 20, 22, 24]; // Varying font sizes
-    const columns = Math.floor(canvas.width / Math.max(...fontSizes));
-    const drops = Array(columns).fill(0);
+    const particles = Array(200).fill().map(() => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 2,
+      xVel: Math.random() * 0.3 - 0.15,
+      yVel: Math.random() * 0.3 - 0.15,
+    }));
 
-    function drawMatrix() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(0, 255, 170, 0.5)";
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        p.x += p.xVel;
+        p.y += p.yVel;
 
-      drops.forEach((y, x) => {
-        const fontSize = fontSizes[Math.floor(x % fontSizes.length)]; // Neat size flow per column
-        ctx.font = `${fontSize}px 'Courier New'`;
-
-        const text = Math.random() > 0.5 ? "1" : "0"; // Generate 1s and 0s
-        ctx.fillStyle = "#00ff00"; // Fixed Matrix green
-        ctx.fillText(text, x * fontSize, y * fontSize);
-
-        // Reset drop if it moves off-screen
-        if (y * fontSize > canvas.height) {
-          drops[x] = 0;
-        }
-
-        drops[x]++;
+        if (p.x < 0 || p.x > canvas.width) p.xVel *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.yVel *= -1;
       });
     }
 
-    setInterval(drawMatrix, 50);
+    setInterval(drawParticles, 50);
 
-    // Adjust canvas size on window resize
+    // Resize canvas on window resize
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -137,4 +170,5 @@
   </script>
 </body>
 </html>
+
 
