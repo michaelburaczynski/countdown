@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Arial', sans-serif;
-      background: radial-gradient(circle, #0a0a0a, #000000); /* Mysterious dark gradient */
+      background: radial-gradient(circle, #0a0a0a, #000000); /* Dark mysterious gradient */
       color: #ff3333; /* Red text */
       overflow: hidden; /* Prevent scrolling */
       display: flex;
@@ -20,41 +20,19 @@
       flex-direction: column;
     }
 
-    /* Subtle Animated Background */
-    @keyframes drift {
-      0% { background-position: 0 0; }
-      100% { background-position: 100% 100%; }
-    }
-
-    body::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(255, 51, 51, 0.15), transparent 70%);
-      animation: drift 10s linear infinite;
-      z-index: 0;
-    }
-
     /* Countdown Container */
     #countdown {
       position: relative;
       z-index: 10;
       display: flex;
       justify-content: center;
-      gap: 2rem;
+      gap: 1.5rem;
       font-size: 2rem;
-    }
-
-    .time {
-      text-align: center;
     }
 
     .time span {
       display: block;
-      font-size: 4.5rem; /* Increased size */
+      font-size: 4.5rem; /* Large font for clarity */
       font-weight: bold;
       text-shadow: 0 0 8px #ff3333, 0 0 16px #ff3333; /* Glowing effect */
     }
@@ -78,27 +56,17 @@
       width: 100%;
       z-index: 10;
     }
-
-    /* Particle Effect */
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
   </style>
 </head>
 <body>
   <h1>Your Journey Begins Soon...</h1>
   <div id="countdown">
-    <div class="time"><span id="days">0</span>Days</div>
-    <div class="time"><span id="hours">0</span>Hours</div>
-    <div class="time"><span id="minutes">0</span>Minutes</div>
-    <div class="time"><span id="seconds">0</span>Seconds</div>
+    <span id="days">00</span>
+    <span id="hours">00</span>
+    <span id="minutes">00</span>
+    <span id="seconds">00</span>
   </div>
   <footer>Await further instructions...</footer>
-
-  <canvas id="particles"></canvas>
 
   <script>
     // Countdown Timer
@@ -112,10 +80,10 @@
       const hour = minute * 60;
       const day = hour * 24;
 
-      const days = Math.floor(difference / day);
-      const hours = Math.floor((difference % day) / hour);
-      const minutes = Math.floor((difference % hour) / minute);
-      const seconds = Math.floor((difference % minute) / second);
+      const days = Math.floor(difference / day).toString().padStart(2, '0');
+      const hours = Math.floor((difference % day) / hour).toString().padStart(2, '0');
+      const minutes = Math.floor((difference % hour) / minute).toString().padStart(2, '0');
+      const seconds = Math.floor((difference % minute) / second).toString().padStart(2, '0');
 
       document.getElementById("days").innerText = days;
       document.getElementById("hours").innerText = hours;
@@ -129,44 +97,6 @@
     }
 
     const interval = setInterval(updateCountdown, 1000);
-
-    // Particle Effect
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const particles = Array(200).fill().map(() => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: Math.random() * 2,
-      xVel: Math.random() * 0.3 - 0.15,
-      yVel: Math.random() * 0.3 - 0.15,
-    }));
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "rgba(255, 255, 255, 0.8)"; /* White particles */
-      particles.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
-        p.x += p.xVel;
-        p.y += p.yVel;
-
-        if (p.x < 0 || p.x > canvas.width) p.xVel *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.yVel *= -1;
-      });
-    }
-
-    setInterval(drawParticles, 50);
-
-    // Resize canvas on window resize
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
   </script>
 </body>
 </html>
