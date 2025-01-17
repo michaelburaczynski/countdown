@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countdown</title>
+  <title>Christmas Countdown</title>
   <style>
     /* General Styling */
     body {
       margin: 0;
       padding: 0;
       font-family: 'Arial', sans-serif;
-      background: radial-gradient(circle, #0a0a0a, #000000); /* Dark mysterious gradient */
-      color: #ff3333; /* Red text */
+      background: linear-gradient(to bottom, #003300, #001a00); /* Dark green gradient */
+      color: #ff3333; /* Festive red for text */
       overflow: hidden; /* Prevent scrolling */
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       flex-direction: column;
+      position: relative;
     }
 
     /* Countdown Container */
@@ -29,27 +30,34 @@
       gap: 2rem; /* Space between numbers */
     }
 
-    .time {
-      text-align: center;
-    }
-
-    .time span {
+    #countdown span {
       display: block;
-      font-size: 12rem; /* Huge font size for dominant numbers */
+      font-size: 15rem; /* Massive font size */
       font-weight: bold;
-      text-shadow: 0 0 20px #ff3333, 0 0 40px #ff3333, 0 0 60px #ff3333; /* Intense glowing effect */
+      color: #ffffff; /* White numbers for contrast */
+      text-shadow: 0 0 20px #ff3333, 0 0 40px #ff3333, 0 0 60px #ff3333; /* Festive glowing effect */
     }
 
     /* Footer */
     footer {
       position: absolute;
       bottom: 20px;
-      font-size: 1rem; /* Subtle and small */
-      color: rgba(255, 51, 51, 0.9);
+      font-size: 1.2rem; /* Small footer text */
+      color: rgba(255, 255, 255, 0.8); /* Subtle white text */
+      text-shadow: 0 0 10px #ffffff;
       text-align: center;
-      text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333; /* Subtle glowing effect */
       width: 100%;
       z-index: 10;
+    }
+
+    /* Snowfall Effect */
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
     }
   </style>
 </head>
@@ -60,7 +68,9 @@
     <span id="minutes">00</span>
     <span id="seconds">00</span>
   </div>
-  <footer>Await further instructions...</footer>
+  <footer>Christmas Scavenger Hunt Countdown</footer>
+
+  <canvas id="snow"></canvas>
 
   <script>
     // Countdown Timer
@@ -86,11 +96,49 @@
 
       if (difference < 0) {
         clearInterval(interval);
-        document.getElementById("countdown").innerHTML = "<h2>It’s Time...</h2>";
+        document.getElementById("countdown").innerHTML = "<h2>The Hunt Begins!</h2>";
       }
     }
 
     const interval = setInterval(updateCountdown, 1000);
+
+    // Snowfall Effect
+    const canvas = document.getElementById('snow');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const snowflakes = Array(200).fill().map(() => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: Math.random() * 3 + 1,
+      speed: Math.random() * 1 + 0.5
+    }));
+
+    function drawSnow() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      snowflakes.forEach(flake => {
+        ctx.beginPath();
+        ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+        ctx.fill();
+        flake.y += flake.speed;
+
+        if (flake.y > canvas.height) {
+          flake.y = 0;
+          flake.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    setInterval(drawSnow, 30);
+
+    // Adjust canvas size on window resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
   </script>
 </body>
 </html>
