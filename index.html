@@ -11,10 +11,10 @@
       margin: 0;
       padding: 0;
       font-family: 'Dancing Script', cursive; /* Footer font */
-      background-color: #D32E2E; /* Green background for the present */
+      background-color: #b22222; /* Green background for the present */
       background-image: 
-        linear-gradient(to bottom, #E1B12C, #E1B12C), /* Vertical red ribbon */
-        linear-gradient(to right, #E1B12C, #E1B12C); /* Horizontal red ribbon */
+        linear-gradient(to bottom, #013220, #013220), /* Vertical red ribbon */
+        linear-gradient(to right, #013220, #013220); /* Horizontal red ribbon */
       background-size: 100% 10%, 10% 100%; /* Full thickness for ribbons */
       background-position: center center;
       background-repeat: no-repeat;
@@ -78,6 +78,9 @@
   </div>
   <footer>Await Further Instructions...</footer>
 
+  <!-- Ticking Sound -->
+  <audio id="tick-sound" src="tick.mp3" preload="auto"></audio>
+
   <canvas id="snow"></canvas>
 
   <script>
@@ -101,6 +104,11 @@
       document.getElementById("hours").innerText = hours;
       document.getElementById("minutes").innerText = minutes;
       document.getElementById("seconds").innerText = seconds;
+
+      // Play ticking sound
+      const tickSound = document.getElementById("tick-sound");
+      tickSound.currentTime = 0; // Reset sound
+      tickSound.play();
 
       if (difference < 0) {
         clearInterval(interval);
