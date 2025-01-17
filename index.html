@@ -26,40 +26,34 @@
       z-index: 10;
       display: flex;
       justify-content: center;
-      gap: 1.5rem;
-      font-size: 2rem;
+      gap: 2rem;
+    }
+
+    .time {
+      text-align: center;
     }
 
     .time span {
       display: block;
-      font-size: 4.5rem; /* Large font for clarity */
+      font-size: 8rem; /* Increased size for large numbers */
       font-weight: bold;
-      text-shadow: 0 0 8px #ff3333, 0 0 16px #ff3333; /* Glowing effect */
-    }
-
-    /* Intro Text */
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      text-align: center;
-      text-shadow: 0 0 10px #ff3333, 0 0 20px #ff3333; /* Glowing effect */
-      z-index: 10;
+      text-shadow: 0 0 20px #ff3333, 0 0 40px #ff3333, 0 0 60px #ff3333; /* Strong glowing effect */
     }
 
     /* Footer */
     footer {
       position: absolute;
       bottom: 20px;
-      font-size: 0.9rem;
-      color: rgba(255, 51, 51, 0.8);
+      font-size: 1.2rem;
+      color: rgba(255, 51, 51, 0.9);
       text-align: center;
+      text-shadow: 0 0 20px #ff3333, 0 0 40px #ff3333; /* Strong glowing effect */
       width: 100%;
       z-index: 10;
     }
   </style>
 </head>
 <body>
-  <h1>Your Journey Begins Soon...</h1>
   <div id="countdown">
     <span id="days">00</span>
     <span id="hours">00</span>
