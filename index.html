@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Dancing Script', cursive; /* Footer font */
-      background: linear-gradient(to bottom, #540d14, #1b4332); /* Deep red to forest green gradient */
+      background: linear-gradient(to bottom, #ff6b6b, #ffd56b); /* Bright red to warm gold gradient */
       color: #fff5e1; /* Soft white for cozy glow */
       overflow: hidden;
       display: flex;
@@ -36,8 +36,8 @@
       display: block;
       font-size: 12rem; /* Large font size for countdown */
       font-weight: 700; /* Bold weight */
-      color: #fff5e1; /* Warm white numbers */
-      text-shadow: 0 0 15px #ffad60, 0 0 30px #ffad60; /* Golden glow */
+      color: #ffffff; /* Crisp white numbers */
+      text-shadow: 0 0 20px #ffad60, 0 0 40px #ffad60; /* Golden glow */
     }
 
     /* Footer */
@@ -111,12 +111,12 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const snowflakes = Array(150).fill().map(() => ({
+    const snowflakes = Array(100).fill().map(() => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
       radius: Math.random() * 2 + 1,
-      speed: Math.random() * 0.5 + 0.5,
-      opacity: Math.random() * 0.7 + 0.3, /* Softer snowflakes */
+      speed: Math.random() * 0.3 + 0.2, /* Slower speed */
+      opacity: Math.random() * 0.7 + 0.3, /* Softer, lighter snowflakes */
     }));
 
     function drawSnow() {
