@@ -3,94 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Christmas Countdown</title>
+  <title>Countdown</title>
   <style>
-    /* General Styling */
-    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@700&display=swap'); /* Cozy cursive and modern sans-serif fonts */
+    /* General Body Styling */
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Dancing Script', cursive; /* Footer font */
-      background-color: #b22222; /* Red background for the present */
-      background-image: 
-        linear-gradient(to bottom, #013220, #013220), /* Vertical gold ribbon */
-        linear-gradient(to right, #013220, #013220); /* Horizontal gold ribbon */
-      background-size: 100% 10%, 10% 100%; /* Full thickness for ribbons */
-      background-position: center center;
-      background-repeat: no-repeat;
-      color: #fff5e1; /* Soft white for cozy glow */
-      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace; /* Matrix-style font */
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      flex-direction: column;
-      position: relative;
+      background: black; /* Dark background */
+      color: #00ff00; /* Matrix green text */
+      text-align: center;
     }
 
-    /* Countdown Container */
+    /* Countdown Styling */
     #countdown {
-      position: relative;
-      z-index: 10;
       display: flex;
-      justify-content: center;
-      gap: 4rem; /* Increased spacing between numbers */
-      font-family: 'Poppins', sans-serif; /* Modern sans-serif font for numbers */
+      gap: 2rem;
+      font-size: 2rem;
     }
 
-    #countdown span {
+    .time {
+      text-align: center;
+    }
+
+    .time span {
       display: block;
-      font-size: 12rem; /* Large font size for countdown */
-      font-weight: 700; /* Bold weight */
-      color: #ffffff; /* Crisp white numbers */
-      text-shadow: 0 0 20px #ffad60, 0 0 40px #ffad60; /* Golden glow */
+      font-size: 4rem;
+      font-weight: bold;
+      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; /* Glowing effect */
     }
 
-    /* Footer */
     footer {
       position: absolute;
       bottom: 20px;
-      font-size: 1.5rem; /* Footer text size */
-      color: #fff5e1; /* Warm white */
-      text-shadow: 0 0 10px #ffad60, 0 0 20px #ffad60; /* Cozy golden glow */
-      text-align: center;
-      width: 100%;
-      z-index: 10;
-    }
-
-    /* Snowfall Effect */
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
+      font-size: 0.9rem;
+      color: rgba(0, 255, 0, 0.8);
     }
   </style>
 </head>
 <body>
   <div id="countdown">
-    <span id="days">00</span>
-    <span id="hours">00</span>
-    <span id="minutes">00</span>
-    <span id="seconds">00</span>
+    <div class="time"><span id="days">0</span>Days</div>
+    <div class="time"><span id="hours">0</span>Hours</div>
+    <div class="time"><span id="minutes">0</span>Minutes</div>
+    <div class="time"><span id="seconds">0</span>Seconds</div>
   </div>
   <footer>Await Further Instructions...</footer>
 
-  <canvas id="snow"></canvas>
-
   <script>
-    // Store the ticking sounds in an array
-    const tickingSounds = [
-      "echoing-clock-tick.wav", // Replace with the actual file names
-      "echoing-clock-tick-2.wav",
-      "echoing-clock-tick-3.wav",
-      "echoing-clock-tick-4.wav",
-    ];
-
-    let currentSoundIndex = 0; // Keeps track of the current sound
-
     function updateCountdown() {
       const targetDate = new Date("September 1, 2025 00:00:00").getTime();
       const now = new Date().getTime();
@@ -101,88 +65,23 @@
       const hour = minute * 60;
       const day = hour * 24;
 
-      const days = Math.floor(difference / day).toString().padStart(2, '0');
-      const hours = Math.floor((difference % day) / hour).toString().padStart(2, '0');
-      const minutes = Math.floor((difference % hour) / minute).toString().padStart(2, '0');
-      const seconds = Math.floor((difference % minute) / second).toString().padStart(2, '0');
+      const days = Math.floor(difference / day);
+      const hours = Math.floor((difference % day) / hour);
+      const minutes = Math.floor((difference % hour) / minute);
+      const seconds = Math.floor((difference % minute) / second);
 
       document.getElementById("days").innerText = days;
       document.getElementById("hours").innerText = hours;
       document.getElementById("minutes").innerText = minutes;
       document.getElementById("seconds").innerText = seconds;
 
-      // Play the current sound
-      const tickSound = new Audio(tickingSounds[currentSoundIndex]);
-      tickSound.play().catch((err) => console.error("Audio playback failed:", err));
-
-      // Update to the next sound in sequence
-      currentSoundIndex = (currentSoundIndex + 1) % tickingSounds.length;
-
       if (difference < 0) {
         clearInterval(interval);
-        document.getElementById("countdown").innerHTML = "<h2>The Hunt Begins!</h2>";
+        document.getElementById("countdown").innerHTML = "<h2>Time's Up!</h2>";
       }
     }
 
     const interval = setInterval(updateCountdown, 1000);
-
-    // Snowflake Shapes for Snowfall
-    const canvas = document.getElementById('snow');
-    const ctx = canvas.getContext('2d');
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const snowflakes = Array(50).fill().map(() => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: Math.random() * 10 + 10, /* Snowflake size */
-      speed: Math.random() * 0.5 + 0.3, /* Gentle speed */
-      angle: Math.random() * Math.PI * 2, /* Rotation */
-    }));
-
-    function drawSnow() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      snowflakes.forEach(flake => {
-        ctx.save();
-        ctx.translate(flake.x, flake.y);
-        ctx.rotate(flake.angle);
-        ctx.beginPath();
-
-        // Draw a simple snowflake shape
-        ctx.moveTo(0, -flake.radius / 2);
-        ctx.lineTo(0, flake.radius / 2);
-        ctx.moveTo(-flake.radius / 2, 0);
-        ctx.lineTo(flake.radius / 2, 0);
-        ctx.moveTo(-flake.radius / 3, -flake.radius / 3);
-        ctx.lineTo(flake.radius / 3, flake.radius / 3);
-        ctx.moveTo(-flake.radius / 3, flake.radius / 3);
-        ctx.lineTo(flake.radius / 3, -flake.radius / 3);
-
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.restore();
-
-        // Move snowflake
-        flake.y += flake.speed;
-        flake.angle += 0.01; // Gentle rotation
-
-        // Reset snowflake position if it goes off screen
-        if (flake.y > canvas.height) {
-          flake.y = -flake.radius;
-          flake.x = Math.random() * canvas.width;
-        }
-      });
-    }
-
-    setInterval(drawSnow, 30);
-
-    // Adjust canvas size on window resize
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
   </script>
 </body>
 </html>
