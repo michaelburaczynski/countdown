@@ -3,73 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matrix Countdown</title>
+  <title>Countdown</title>
   <style>
     /* General Styling */
-    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@700&display=swap');
     body {
       margin: 0;
       padding: 0;
-      background: black;
-      overflow: hidden;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Courier New', Courier, monospace; /* Matrix-style font */
+      background: black; /* Dark background */
+      color: #00ff00; /* Matrix green text */
+      overflow: hidden; /* Prevent scrollbars from appearing */
     }
 
-    /* Countdown Text Styling */
+    /* Countdown Styling */
     #countdown {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      color: #00ff00;
-      font-size: 3rem;
-      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      font-size: 2rem;
+      margin-top: 20vh;
     }
 
-    #countdown span {
+    .time {
+      text-align: center;
+    }
+
+    .time span {
       display: block;
       font-size: 4rem;
       font-weight: bold;
+      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; /* Glowing effect */
     }
 
-    /* Static Text Styling */
-    #static-text {
-      position: absolute;
+    footer {
+      position: fixed; /* Ensures it stays visible at all times */
       bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+      font-size: 0.9rem;
+      color: rgba(0, 255, 0, 0.8);
       text-align: center;
-      color: #00ff00;
-      font-size: 1.5rem;
-      text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+      width: 100%;
+      z-index: 10; /* Ensures it stays above the canvas */
     }
 
-    /* Falling Code Canvas */
+    /* Falling Code Effect */
     canvas {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
+      z-index: 1; /* Behind the countdown and footer */
     }
   </style>
 </head>
 <body>
-  <!-- Countdown Timer -->
-  <div id="countdown">
-    <span id="days">00</span>
-    <span id="hours">00</span>
-    <span id="minutes">00</span>
-    <span id="seconds">00</span>
-  </div>
-
-  <!-- Static Text -->
-  <div id="static-text">Await further instructions...</div>
-
-  <!-- Falling Code Effect -->
   <canvas id="matrix"></canvas>
+  <div id="countdown">
+    <div class="time"><span id="days">0</span>Days</div>
+    <div class="time"><span id="hours">0</span>Hours</div>
+    <div class="time"><span id="minutes">0</span>Minutes</div>
+    <div class="time"><span id="seconds">0</span>Seconds</div>
+  </div>
+  <footer>Await Further Instructions...</footer>
 
   <script>
     // Countdown Timer
@@ -83,10 +78,10 @@
       const hour = minute * 60;
       const day = hour * 24;
 
-      const days = Math.floor(difference / day).toString().padStart(2, '0');
-      const hours = Math.floor((difference % day) / hour).toString().padStart(2, '0');
-      const minutes = Math.floor((difference % hour) / minute).toString().padStart(2, '0');
-      const seconds = Math.floor((difference % minute) / second).toString().padStart(2, '0');
+      const days = Math.floor(difference / day);
+      const hours = Math.floor((difference % day) / hour);
+      const minutes = Math.floor((difference % hour) / minute);
+      const seconds = Math.floor((difference % minute) / second);
 
       document.getElementById("days").innerText = days;
       document.getElementById("hours").innerText = hours;
@@ -95,48 +90,50 @@
 
       if (difference < 0) {
         clearInterval(interval);
-        document.getElementById("countdown").innerHTML = "<h2>The Countdown Has Ended!</h2>";
+        document.getElementById("countdown").innerHTML = "<h2>Time's Up!</h2>";
       }
     }
 
     const interval = setInterval(updateCountdown, 1000);
 
-    // Falling Code Effect
+    // Matrix Falling Code Effect
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const columns = Math.floor(canvas.width / 20);
-    const drops = Array(columns).fill(1);
+    const letters = Array(256).join("1").split("");
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+
+    const drops = Array(Math.floor(columns)).fill(1);
 
     function drawMatrix() {
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = '#00ff00';
-      ctx.font = '20px monospace';
+      ctx.fillStyle = "#00ff00";
+      ctx.font = `${fontSize}px 'Courier New'`;
 
-      for (let i = 0; i < drops.length; i++) {
+      drops.forEach((y, x) => {
         const text = String.fromCharCode(0x30A0 + Math.random() * 96);
-        ctx.fillText(text, i * 20, drops[i] * 20);
+        ctx.fillText(text, x * fontSize, y * fontSize);
 
-        if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
+        if (y * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[x] = 0;
         }
-        drops[i]++;
-      }
+
+        drops[x]++;
+      });
     }
 
     setInterval(drawMatrix, 50);
 
-    // Adjust Canvas Size on Resize
+    // Adjust canvas size on window resize
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      drops.length = Math.floor(canvas.width / 20);
-      drops.fill(1);
     });
   </script>
 </body>
